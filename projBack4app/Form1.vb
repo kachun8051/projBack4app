@@ -6,6 +6,8 @@ Public Class Form1
     Private WithEvents objProducts As clsProducts
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        btnAdd.Text = "Add Product"
+        btnRefresh.Text = "Refresh"
         objProducts = New clsProducts
         AddHandler objProducts.ListFilledDone, AddressOf ListFilledDoneHandler
         objProducts.getProductData()
@@ -18,7 +20,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
         Dim dlg As Form = New dlgProductAdd
         Dim response = dlg.ShowDialog(Me)
         If response = DialogResult.OK Then
@@ -26,7 +28,9 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-
+    Private Sub btnRefresh_Click(sender As Object, e As EventArgs) Handles btnRefresh.Click
+        objProducts = New clsProducts
+        AddHandler objProducts.ListFilledDone, AddressOf ListFilledDoneHandler
+        objProducts.getProductData()
     End Sub
 End Class

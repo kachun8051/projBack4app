@@ -18,19 +18,23 @@ Public Class clsProducts
         End If
         dtProduct = New DataTable
         'Adding the Columns.
+        dtProduct.Columns.Add("id", GetType(System.Int32))
         dtProduct.Columns.Add("itemnum", GetType(System.String))
-        dtProduct.Columns.Add("itemdesc", GetType(System.String))
-        dtProduct.Columns.Add("itemuom", GetType(System.String))
-        dtProduct.Columns.Add("itemprice", GetType(System.Decimal))
-        dtProduct.Columns.Add("itemstandardweight", GetType(System.Int32))
+        dtProduct.Columns.Add("itemname", GetType(System.String))
+        dtProduct.Columns.Add("standardweight", GetType(System.String))
+        dtProduct.Columns.Add("uom", GetType(System.String))
+        dtProduct.Columns.Add("price", GetType(System.Decimal))
+        Dim idx As Int16 = 0
         'Adding the Rows.
         For Each obj_1 As clsProduct In lstProduct
+            idx += 1
             Dim newrow As DataRow = dtProduct.NewRow()
+            newrow("id") = idx
             newrow("itemnum") = obj_1.itemnum
-            newrow("itemdesc") = obj_1.itemname
-            newrow("itemuom") = obj_1.itemuom
-            newrow("itemprice") = obj_1.itemprice
-            newrow("itemstandardweight") = obj_1.itemstandardweight
+            newrow("itemname") = obj_1.itemname
+            newrow("standardweight") = obj_1.itemstandardweight
+            newrow("uom") = obj_1.itemuom
+            newrow("price") = obj_1.itemprice
             dtProduct.Rows.Add(newrow)
         Next
     End Sub
