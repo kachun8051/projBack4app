@@ -74,7 +74,7 @@ Partial Class Form1
         Me.dgvProduct.ReadOnly = True
         Me.dgvProduct.RowHeadersWidth = 51
         Me.dgvProduct.RowTemplate.Height = 27
-        Me.dgvProduct.Size = New System.Drawing.Size(1030, 440)
+        Me.dgvProduct.Size = New System.Drawing.Size(1217, 440)
         Me.dgvProduct.TabIndex = 1
         '
         'btnRefresh
@@ -94,6 +94,7 @@ Partial Class Form1
         Me.colId.MinimumWidth = 6
         Me.colId.Name = "colId"
         Me.colId.ReadOnly = True
+        Me.colId.Width = 75
         '
         'colItemnum
         '
@@ -111,7 +112,7 @@ Partial Class Form1
         Me.colItemname.MinimumWidth = 6
         Me.colItemname.Name = "colItemname"
         Me.colItemname.ReadOnly = True
-        Me.colItemname.Width = 300
+        Me.colItemname.Width = 400
         '
         'colItemStdWeight
         '
@@ -138,13 +139,13 @@ Partial Class Form1
         Me.colItemprice.MinimumWidth = 6
         Me.colItemprice.Name = "colItemprice"
         Me.colItemprice.ReadOnly = True
-        Me.colItemprice.Width = 125
+        Me.colItemprice.Width = 160
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1067, 562)
+        Me.ClientSize = New System.Drawing.Size(1244, 562)
         Me.Controls.Add(Me.btnRefresh)
         Me.Controls.Add(Me.dgvProduct)
         Me.Controls.Add(Me.btnAdd)

@@ -52,6 +52,10 @@ Public Class clsProducts
         ' MsgBox("New record with objectId: " & newObjectId & " is added", "New Record Added")
     End Sub
 
+    Public Function findProductByItemnum(_itemnum As String) As clsProduct
+
+    End Function
+
     Public Function getProductData() As Boolean
 
         ' using TLS 1.2
