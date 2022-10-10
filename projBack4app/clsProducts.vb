@@ -43,9 +43,8 @@ Public Class clsProducts
         Console.WriteLine(e.Result)
         Dim jsonResultToDict As Dictionary(Of String, List(Of clsProduct)) =
                 Json.JsonConvert.DeserializeObject(Of Dictionary(Of String, List(Of clsProduct)))(e.Result)
-        ' {"objectId":"QCZJdyiTFi","createdAt":"2022-10-03T01:55:03.254Z"}
-        ' Dim newObjectId As String = ""
         jsonResultToDict.TryGetValue("results", lstProduct)
+        ' convert the lstProduct to datatable such that the listview can bind to it
         ConvertToDataTable()
         Console.WriteLine("Event is triggered")
         RaiseEvent ListFilledDone(True)
@@ -53,7 +52,14 @@ Public Class clsProducts
     End Sub
 
     Public Function findProductByItemnum(_itemnum As String) As clsProduct
-
+        Dim objFound As clsProduct = Nothing
+        For Each obj_2 As clsProduct In lstProduct
+            If obj_2.itemnum = _itemnum Then
+                objFound = obj_2
+                Exit For
+            End If
+        Next
+        Return objFound
     End Function
 
     Public Function getProductData() As Boolean
@@ -80,6 +86,45 @@ Public Class clsProducts
         End Try
         'Dim sendData As String = 
 
+    End Function
+
+    ' this function replaceProduct is used replace item in the list 
+    ' i.e. update the list
+    Public Function replaceProductInTheList(ByRef _obj As clsProduct) As Boolean
+
+        Dim foundidx As Int32 = foundIndexInTheList(_obj.itemnum)
+        If foundidx > -1 Then
+            lstProduct(foundidx) = _obj
+            ConvertToDataTable()
+            Return True
+        End If
+        Return False
+    End Function
+
+    ' this function addProduct is used add item in the list 
+    ' i.e. add the list
+    Public Function addProductToTheList(ByRef _obj As clsProduct) As Boolean
+
+        Dim foundidx As Int32 = foundIndexInTheList(_obj.itemnum)
+        If foundidx = -1 Then
+            lstProduct.Add(_obj)
+            ConvertToDataTable()
+            Return True
+        End If
+        Return False
+    End Function
+
+    Private Function foundIndexInTheList(_itemnum As String) As Int32
+        Dim foundidx As Int32 = -1
+        Dim i As Int32 = 0
+        For Each obj_1 As clsProduct In lstProduct
+            If obj_1.itemnum = _itemnum Then
+                foundidx = i
+                Exit For
+            End If
+            i += 1
+        Next
+        Return foundidx
     End Function
 
 End Class

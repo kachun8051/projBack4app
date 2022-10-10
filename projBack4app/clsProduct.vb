@@ -1,8 +1,13 @@
-﻿Imports Newtonsoft
+﻿Imports Newtonsoft.Json
 
 Public Class clsProduct
+
+    Public Property objectId As String
     Public Property itemnum As String
+    ' itemname is english name of product
     Public Property itemname As String
+    ' itemname2 is chinese name of product
+    Public Property itemname2 As String
     Public Property itemprice As Decimal
     Public Property itemuom As String
     Public Property itemstandardweight As Int32
@@ -30,13 +35,15 @@ Public Class clsProduct
 
         Dim obj As New clsProduct With
         {
+            .objectId = objectId,
             .itemnum = itemnum,
             .itemname = itemname,
+            .itemname2 = itemname2,
             .itemprice = itemprice,
             .itemuom = itemuom,
             .itemstandardweight = itemstandardweight
         }
-        Return Newtonsoft.Json.JsonConvert.SerializeObject(obj)
+        Return JsonConvert.SerializeObject(obj)
 
     End Function
 
