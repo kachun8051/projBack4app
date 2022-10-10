@@ -26,22 +26,21 @@ Partial Class Form1
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.btnAdd = New System.Windows.Forms.Button()
         Me.dgvProduct = New System.Windows.Forms.DataGridView()
-        Me.btnRefresh = New System.Windows.Forms.Button()
         Me.colId = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colItemnum = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colItemname = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colItemStdWeight = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colItemuom = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colItemprice = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.btnRefresh = New System.Windows.Forms.Button()
         CType(Me.dgvProduct, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'btnAdd
         '
-        Me.btnAdd.Location = New System.Drawing.Point(13, 460)
-        Me.btnAdd.Margin = New System.Windows.Forms.Padding(4)
+        Me.btnAdd.Location = New System.Drawing.Point(10, 368)
         Me.btnAdd.Name = "btnAdd"
-        Me.btnAdd.Size = New System.Drawing.Size(135, 59)
+        Me.btnAdd.Size = New System.Drawing.Size(101, 47)
         Me.btnAdd.TabIndex = 0
         Me.btnAdd.Text = "Button1"
         Me.btnAdd.UseVisualStyleBackColor = True
@@ -69,23 +68,15 @@ Partial Class Form1
         DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvProduct.DefaultCellStyle = DataGridViewCellStyle2
-        Me.dgvProduct.Location = New System.Drawing.Point(15, 15)
+        Me.dgvProduct.Location = New System.Drawing.Point(11, 12)
+        Me.dgvProduct.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
         Me.dgvProduct.Name = "dgvProduct"
         Me.dgvProduct.ReadOnly = True
         Me.dgvProduct.RowHeadersWidth = 51
         Me.dgvProduct.RowTemplate.Height = 27
-        Me.dgvProduct.Size = New System.Drawing.Size(1217, 440)
+        Me.dgvProduct.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvProduct.Size = New System.Drawing.Size(860, 352)
         Me.dgvProduct.TabIndex = 1
-        '
-        'btnRefresh
-        '
-        Me.btnRefresh.Location = New System.Drawing.Point(192, 460)
-        Me.btnRefresh.Margin = New System.Windows.Forms.Padding(4)
-        Me.btnRefresh.Name = "btnRefresh"
-        Me.btnRefresh.Size = New System.Drawing.Size(135, 59)
-        Me.btnRefresh.TabIndex = 2
-        Me.btnRefresh.Text = "Button2"
-        Me.btnRefresh.UseVisualStyleBackColor = True
         '
         'colId
         '
@@ -141,16 +132,25 @@ Partial Class Form1
         Me.colItemprice.ReadOnly = True
         Me.colItemprice.Width = 160
         '
+        'btnRefresh
+        '
+        Me.btnRefresh.Location = New System.Drawing.Point(144, 368)
+        Me.btnRefresh.Name = "btnRefresh"
+        Me.btnRefresh.Size = New System.Drawing.Size(101, 47)
+        Me.btnRefresh.TabIndex = 2
+        Me.btnRefresh.Text = "Button2"
+        Me.btnRefresh.UseVisualStyleBackColor = True
+        '
         'Form1
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 15.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1244, 562)
+        Me.ClientSize = New System.Drawing.Size(884, 451)
         Me.Controls.Add(Me.btnRefresh)
         Me.Controls.Add(Me.dgvProduct)
         Me.Controls.Add(Me.btnAdd)
-        Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "Form1"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Form1"
         CType(Me.dgvProduct, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
