@@ -1,4 +1,4 @@
-﻿Imports Newtonsoft
+Imports Newtonsoft
 Imports System.ComponentModel
 Imports System.Net
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement
