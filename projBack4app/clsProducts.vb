@@ -1,4 +1,5 @@
 ﻿Imports Newtonsoft
+Imports System.ComponentModel
 Imports System.Net
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 
@@ -45,7 +46,9 @@ Public Class clsProducts
                 Json.JsonConvert.DeserializeObject(Of Dictionary(Of String, List(Of clsProduct)))(e.Result)
         ' {"objectId":"QCZJdyiTFi","createdAt":"2022-10-03T01:55:03.254Z"}
         ' Dim newObjectId As String = ""
+        ' Dim lstData As New List(Of clsProduct)
         jsonResultToDict.TryGetValue("results", lstProduct)
+        ' uuu
         ConvertToDataTable()
         Console.WriteLine("Event is triggered")
         RaiseEvent ListFilledDone(True)
