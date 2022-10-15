@@ -1,17 +1,15 @@
 ﻿Imports Newtonsoft.Json
 
 Public Class clsProduct
-
     Public Property objectId As String
     Public Property itemnum As String
     ' itemname is english name of product
     Public Property itemname As String
     ' itemname2 is chinese name of product
     Public Property itemname2 As String
-    Public Property itemprice As Decimal
     Public Property itemuom As String
     Public Property itemstandardweight As Int32
-
+    Public Property itemprice As Decimal
 
     Public Function isValidated() As Boolean
 

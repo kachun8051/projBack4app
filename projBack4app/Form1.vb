@@ -7,6 +7,7 @@ Public Class Form1
     ' copiedProduct is copied clsProduct for add used
     Private copiedProduct As clsProduct
 
+    Private lstTableHeader As List(Of String)
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         btnAdd.Text = "Add Product"
@@ -14,12 +15,32 @@ Public Class Form1
         Me.Text = "Weighting Product System"
         objProducts = New clsProducts
         AddHandler objProducts.ListFilledDone, AddressOf ListFilledDoneHandler
+        AddHandler objProducts.RemoveElementDone, AddressOf RemoveElementDoneHandler
         objProducts.getProductData()
+        lstTableHeader = New List(Of String)(
+            {"objectId", "item no.", "Name", "Name2", "Unit", "Std. Weight", "Price"}
+        )
     End Sub
 
     Private Sub ListFilledDoneHandler(ByVal isSuccess As Boolean)
         If isSuccess Then
-            dgvProduct.DataSource = objProducts.dtProduct
+            dgvProduct.DataSource = objProducts.blProduct  'dtProduct
+            For i As Int16 = 0 To lstTableHeader.Count - 1
+                Me.dgvProduct.Columns(i).HeaderText = lstTableHeader(i)
+            Next
+            Me.dgvProduct.Columns(0).Visible = False ' objectId is invisible
+            Me.dgvProduct.Columns(1).Width = 100 ' Item No.
+            Me.dgvProduct.Columns(2).Width = 200 ' Name
+            Me.dgvProduct.Columns(3).Width = 200 ' Name2
+            Me.dgvProduct.Columns(5).Width = 130 'Std. Weight
+            Me.dgvProduct.Columns(6).Width = 80
+        End If
+    End Sub
+
+    Private Sub RemoveElementDoneHandler(ByVal isSuccess As Boolean, ByVal itemno As String)
+        If isSuccess Then
+            objProducts.deleteProductInTheList(itemno)
+
         End If
     End Sub
 
@@ -36,7 +57,7 @@ Public Class Form1
             copiedProduct = Nothing
             Dim objReturn As clsProduct = dlg.getResultingObject
             objProducts.addProductToTheList(objReturn)
-            dgvProduct.DataSource = objProducts.dtProduct
+            dgvProduct.DataSource = objProducts.blProduct
             dgvProduct.Refresh()
         End If
     End Sub
@@ -47,7 +68,7 @@ Public Class Form1
         objProducts.getProductData()
     End Sub
 
-    Private Sub MenuClicked(sender As Object, e As System.EventArgs)
+    Private Async Sub MenuClicked(sender As Object, e As System.EventArgs)
         Dim selectedIndex As Integer = dgvProduct.SelectedRows(0).Index
         Try
             Dim sender1 As MenuItem = CType(sender, MenuItem)
@@ -83,43 +104,33 @@ Public Class Form1
                     '                RefreshDatagrid(selectedIndex)
                     '            End If
                     '        End If
-                    '    Case "delete"
-                    '        Dim result As DialogResult = MessageBox.Show(String.Format("確定刪除貨品 #{0}?", myitemno),
-                    '                  "刪除貨品", MessageBoxButtons.YesNo)
-                    '        If (result = DialogResult.Yes) Then
-                    '            Dim itemfile_1 As String = String.Format(modCommon.pathOfItem & "\{0}.json", myitemno)
-                    '            Dim menufile_1 As String = modCommon.pathOfMenu & "\labels.json"
-                    '            If IO.File.Exists(itemfile_1) = True Then
-                    '                IO.File.Delete(itemfile_1)
-                    '            End If
-                    '            'modCommon.objBarcodeItemnumMap.removeBarcodeItemNumPairByItemnum(myitemno)
-                    '            If IO.File.Exists(menufile_1) Then
-                    '                Try
-                    '                    Dim styleError As MsgBoxStyle = MsgBoxStyle.OkOnly Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Critical
-                    '                    'Read the json menu without refilling the custom map
-                    '                    Dim isMenuRead4 As Boolean = modCommon.ReadTheJsonMenu
-                    '                    If isMenuRead4 = False Then
-                    '                        MsgBox("不能讀取清單檔案，請聯絡技術支援！", styleError, "無法讀取4")
-                    '                        Return
-                    '                    End If
-                    '                    objJMenu.DeleteItByItem(myitemno)
-                    '                    Dim jsonmenu_1 As String = JsonConvert.SerializeObject(objJMenu)
-                    '                    If jsonmenu_1.IndexOf("lstMenu") > -1 Then 'found
-                    '                        jsonmenu_1 = "[" & modCommon.retrivingSquareBracket(jsonmenu_1) & "]"
-                    '                    End If
-                    '                    IO.File.WriteAllText(menufile_1, jsonmenu_1)                                '
-                    '                Catch ex As Exception
-                    '                    Diagnostics.Debug.WriteLine("Error: " & vbCrLf & ex.Message)
-                    '                    Return
-                    '                End Try
-                    '                'Read the json menu without refilling the custom map
-                    '                Dim isMenuRetrieved As Boolean = modCommon.ReadTheJsonMenu
-                    '                If isMenuRetrieved Then
-                    '                    RefreshDatagrid(selectedIndex - 1)
-                    '                End If
-                    '                Return
-                    '            End If
-                    '        End If
+                Case "delete"
+                    Dim result As DialogResult = MessageBox.Show(String.Format("Delete item #{0}?", myitemno),
+                              "Confirm Delete", MessageBoxButtons.YesNo)
+                    If (result = DialogResult.Yes) Then
+                        'If IO.File.Exists(menufile_1) Then
+                        Try
+                            Dim styleError As MsgBoxStyle = MsgBoxStyle.OkOnly Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Critical
+                            Dim isdeleted As Boolean = Await objProducts.deleteProductData(myitemno)
+
+                            'objJMenu.DeleteItByItem(myitemno)
+                            'Dim jsonmenu_1 As String = JsonConvert.SerializeObject(objJMenu)
+                            'If jsonmenu_1.IndexOf("lstMenu") > -1 Then 'found
+                            '    jsonmenu_1 = "[" & modCommon.retrivingSquareBracket(jsonmenu_1) & "]"
+                            'End If
+                            'IO.File.WriteAllText(menufile_1, jsonmenu_1)                                '
+                        Catch ex As Exception
+                            Diagnostics.Debug.WriteLine("Error: " & vbCrLf & ex.Message)
+                            Return
+                        End Try
+                        'Read the json menu without refilling the custom map
+                        'Dim isMenuRetrieved As Boolean = modCommon.ReadTheJsonMenu
+                        'If isMenuRetrieved Then
+                        '    RefreshDatagrid(selectedIndex - 1)
+                        'End If
+                        'Return
+                    End If
+                    'End If
                 Case "copy"
                     copiedProduct = objProducts.findProductByItemnum(myitemno)
                     If copiedProduct Is Nothing Then
@@ -142,8 +153,8 @@ Public Class Form1
         End If
         If (e.Button = MouseButtons.Right) Then
             Dim currMouseOverRow As Integer = dgvProduct.HitTest(e.X, e.Y).RowIndex
-            'Dim id_1 As String = dgvProduct.SelectedRows.Item(0).Cells.Item("ColId").Value.ToString
-            Dim item_1 As String = dgvProduct.SelectedRows.Item(0).Cells.Item("ColItemnum").Value.ToString
+            ' column 1 is item number
+            Dim item_1 As String = dgvProduct.SelectedRows.Item(0).Cells.Item(1).Value.ToString
             'Dim tag_1 As String = id_1 & "^" & item_1
             Dim cm1 As ContextMenu = New ContextMenu()
             Dim menuitemforshow As MenuItem = New MenuItem() With {.Text = "show", .Tag = item_1}

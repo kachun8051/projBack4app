@@ -144,6 +144,7 @@ Public Class dlgProduct
         web.Headers.Add(HttpRequestHeader.ContentType, "application/json")
         web.Headers.Add("X-Parse-Application-Id", modCommon.AppId)
         web.Headers.Add("X-Parse-REST-API-Key", modCommon.RestApiKey)
+        web.Encoding = System.Text.Encoding.UTF8
         Try
             Dim response As String = Await web.UploadStringTaskAsync(myurl, objProduct.mySerialize)
             Dim jsonResultToDict As Dictionary(Of String, String) =
