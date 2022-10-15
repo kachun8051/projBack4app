@@ -38,9 +38,9 @@ Public Class Form1
     End Sub
 
     Private Sub RemoveElementDoneHandler(ByVal isSuccess As Boolean, ByVal itemno As String)
-        If isSuccess Then
-            objProducts.deleteProductInTheList(itemno)
-        End If
+        'If isSuccess Then
+        '    objProducts.deleteProductInTheList(itemno)
+        'End If
     End Sub
 
     Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
@@ -112,7 +112,7 @@ Public Class Form1
                             Dim styleError As MsgBoxStyle = MsgBoxStyle.OkOnly Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Critical
                             Dim isdeleted As Boolean = Await objProducts.deleteProductData(myitemno)
                             If isdeleted Then
-
+                                objProducts.deleteProductInTheList(myitemno)
                             End If
                             'objJMenu.DeleteItByItem(myitemno)
                             'Dim jsonmenu_1 As String = JsonConvert.SerializeObject(objJMenu)
