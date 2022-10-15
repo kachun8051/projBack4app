@@ -64,12 +64,19 @@ Public Class dlgProduct
 
     Private Async Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
         If m_operation = "add" Then
-            Dim isposted As Boolean = Await postProductData()
+            Dim isposted As Boolean = Await TryInsertProduct()
             If isposted = True Then
                 Me.DialogResult = DialogResult.OK
             End If
+            Return
         End If
-
+        If m_operation = "edit" Then
+            Dim isput As Boolean = Await TryEditProduct()
+            If isput = True Then
+                Me.DialogResult = DialogResult.OK
+            End If
+            Return
+        End If
     End Sub
 
     Private Function fillTheUi() As Boolean
@@ -121,11 +128,8 @@ Public Class dlgProduct
         Return 0
     End Function
 
-    Private Async Function postProductData() As Task(Of Boolean)
+    Private Async Function TryInsertProduct() As Task(Of Boolean)
 
-        ' using TLS 1.2
-        System.Net.ServicePointManager.SecurityProtocol = DirectCast(3072, System.Net.SecurityProtocolType)
-        Dim myurl As String = "https://parseapi.back4app.com/classes/Product"
         Dim objProduct As New clsProduct With
         {
             .itemnum = txtItemnum.Text,
@@ -139,39 +143,59 @@ Public Class dlgProduct
         If isValid = False Then
             Return False
         End If
-        Dim web As New WebClient
-        web.Headers.Add(HttpRequestHeader.Accept, "application/json")
-        web.Headers.Add(HttpRequestHeader.ContentType, "application/json")
-        web.Headers.Add("X-Parse-Application-Id", modCommon.AppId)
-        web.Headers.Add("X-Parse-REST-API-Key", modCommon.RestApiKey)
-        web.Encoding = System.Text.Encoding.UTF8
-        Try
-            Dim response As String = Await web.UploadStringTaskAsync(myurl, objProduct.mySerialize)
-            Dim jsonResultToDict As Dictionary(Of String, String) =
-            JsonConvert.DeserializeObject(Of Dictionary(Of String, String))(response)
-            ' {"objectId":"QCZJdyiTFi","createdAt":"2022-10-03T01:55:03.254Z"}
-            Dim newObjectId As String = ""
-            jsonResultToDict.TryGetValue("objectId", newObjectId)
+        If frmMain.objProducts Is Nothing Then
+            Return False
+        End If
+        Dim json As String = objProduct.mySerialize
+        Dim ret As Boolean = Await frmMain.objProducts.postProductData(json)
+        Dim newObjectId As String = frmMain.objProducts.newobjectId
+        ' Assign the resulting clsProduct
+        m_objResult = New clsProduct With
+        {
+            .objectId = newObjectId,
+            .itemnum = objProduct.itemnum,
+            .itemname = objProduct.itemname,
+            .itemname2 = objProduct.itemname2,
+            .itemuom = objProduct.itemuom,
+            .itemstandardweight = objProduct.itemstandardweight,
+            .itemprice = objProduct.itemprice
+         }
+        Return ret
+
+    End Function
+
+    Private Async Function TryEditProduct() As Task(Of Boolean)
+        ' Edit object with objectId
+        Dim objProduct As New clsProduct With
+        {
+            .objectId = txtObjectId.Text,
+            .itemnum = txtItemnum.Text,
+            .itemname = txtDesc.Text,
+            .itemname2 = txtDesc2.Text,
+            .itemuom = cbxUom.Text,
+            .itemstandardweight = txtStdWeight.Text,
+            .itemprice = txtPrice.Text
+        }
+        Dim isValid As Boolean = objProduct.isValidated()
+        If isValid = False Then
+            Return False
+        End If
+        Dim json As String = objProduct.mySerialize
+        Dim ret As Boolean = Await frmMain.objProducts.putProductData(json)
+        If ret Then
+            ' Assign the resulting clsProduct
             m_objResult = New clsProduct With
             {
-                .objectId = newObjectId,
+                .objectId = objProduct.objectId,
                 .itemnum = objProduct.itemnum,
                 .itemname = objProduct.itemname,
                 .itemname2 = objProduct.itemname2,
                 .itemuom = objProduct.itemuom,
                 .itemstandardweight = objProduct.itemstandardweight,
                 .itemprice = objProduct.itemprice
-            }
-            Dim msgPrompt As String = "New record with objectId: " & newObjectId & " is added"
-            Dim msgTitle As String = "New Record Added"
-            MsgBox(msgPrompt, MsgBoxStyle.Information, msgTitle)
-            Return True
-        Catch ex As Exception
-            Console.WriteLine("dlgProductAdd.postProductData: " & vbCrLf & ex.Message)
-            Return False
-        End Try
-        'Dim sendData As String = 
-
+             }
+        End If
+        Return ret
     End Function
 
 End Class

@@ -1,9 +1,9 @@
 ﻿Imports System.Net
 Imports Newtonsoft
-Public Class Form1
+Public Class frmMain
 
     ' objProducts holds list of clsProduct
-    Private WithEvents objProducts As clsProducts
+    Public WithEvents objProducts As clsProducts
     ' copiedProduct is copied clsProduct for add used
     Private copiedProduct As clsProduct
 
@@ -15,7 +15,7 @@ Public Class Form1
         Me.Text = "Weighting Product System"
         objProducts = New clsProducts
         AddHandler objProducts.ListFilledDone, AddressOf ListFilledDoneHandler
-        AddHandler objProducts.RemoveElementDone, AddressOf RemoveElementDoneHandler
+        ' AddHandler objProducts.RemoveElementDone, AddressOf RemoveElementDoneHandler
         objProducts.getProductData()
         lstTableHeader = New List(Of String)(
             {"objectId", "item no.", "Name", "Name2", "Unit", "Std. Weight", "Price"}
@@ -37,27 +37,19 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub RemoveElementDoneHandler(ByVal isSuccess As Boolean, ByVal itemno As String)
-        'If isSuccess Then
-        '    objProducts.deleteProductInTheList(itemno)
-        'End If
-    End Sub
-
     Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
-        Dim dlg As dlgProduct = New dlgProduct
-        dlg.setOperation("add")
+        Dim dlgInsert As dlgProduct = New dlgProduct
+        dlgInsert.setOperation("add")
         If copiedProduct IsNot Nothing Then
-            dlg.setObject(copiedProduct)
+            dlgInsert.setObject(copiedProduct)
         End If
-        Dim response = dlg.ShowDialog(Me)
+        Dim response = dlgInsert.ShowDialog(Me)
         If response = DialogResult.OK Then
-            'dgvRefreshing("ingredientlabel")
-            'Reset copied object
+            ' Reset copied object
             copiedProduct = Nothing
-            Dim objReturn As clsProduct = dlg.getResultingObject
+            ' update the bindinglist by insert new object
+            Dim objReturn As clsProduct = dlgInsert.getResultingObject
             objProducts.addProductToTheList(objReturn)
-            'dgvProduct.DataSource = objProducts.blProduct
-            'dgvProduct.Refresh()
         End If
     End Sub
 
@@ -71,12 +63,6 @@ Public Class Form1
         Dim selectedIndex As Integer = dgvProduct.SelectedRows(0).Index
         Try
             Dim sender1 As MenuItem = CType(sender, MenuItem)
-
-            'Dim myarr() As String = sender1.Tag.ToString().Split(New Char() {"^"c})
-            'Dim myid As Int32 = CType(myarr(0), Int32)
-            'Dim myitemno As String = myarr(1)
-            'Dim mysheet As String = myarr(2)
-            'Dim mychineseherb As Boolean = CType(myarr(3), Boolean)
             Diagnostics.Debug.WriteLine(sender1.Text)
             Dim myitemno As String = sender1.Tag.ToString()
 
@@ -89,47 +75,31 @@ Public Class Form1
                     If dlgShow.ShowDialog = DialogResult.OK Then
                         dlgShow = Nothing
                     End If
-                    '    Case "edit"
-                    '        Dim frmEdit As New frmItem(myitemno, "edit")
-                    '        frmEdit.setSheetSpec(mysheet)
-                    '        frmEdit.setId(myid)
-                    '        frmEdit.setIsLotNumberReq(mychineseherb)
-                    '        frmEdit.StartPosition = FormStartPosition.CenterParent
-                    '        If frmEdit.ShowDialog = DialogResult.OK Then
-                    '            frmEdit = Nothing
-                    '            'Read the json menu without refilling the custom map
-                    '            Dim isMenuRetrieved As Boolean = modCommon.ReadTheJsonMenu
-                    '            If isMenuRetrieved Then
-                    '                RefreshDatagrid(selectedIndex)
-                    '            End If
-                    '        End If
+                Case "edit"
+                    Dim dlgEdit As New dlgProduct
+                    dlgEdit.setOperation("edit")
+                    dlgEdit.setObject(objProducts.findProductByItemnum(myitemno))
+                    dlgEdit.StartPosition = FormStartPosition.CenterParent
+                    If dlgEdit.ShowDialog = DialogResult.OK Then
+                        ' update the bindinglist by replacing new object
+                        Dim objReturn As clsProduct = dlgEdit.getResultingObject
+                        objProducts.replaceProductInTheList(objReturn)
+                    End If
                 Case "delete"
-                    Dim result As DialogResult = MessageBox.Show(String.Format("Delete item #{0}?", myitemno),
-                              "Confirm Delete", MessageBoxButtons.YesNo)
+                    Dim question As String = String.Format("Delete item #{0}?", myitemno)
+                    Dim result As DialogResult = MessageBox.Show(question, "Confirm Delete", MessageBoxButtons.YesNo)
                     If (result = DialogResult.Yes) Then
-                        'If IO.File.Exists(menufile_1) Then
                         Try
                             Dim styleError As MsgBoxStyle = MsgBoxStyle.OkOnly Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Critical
                             Dim isdeleted As Boolean = Await objProducts.deleteProductData(myitemno)
                             If isdeleted Then
+                                ' update the bindinglist
                                 objProducts.deleteProductInTheList(myitemno)
-                            End If
-                            'objJMenu.DeleteItByItem(myitemno)
-                            'Dim jsonmenu_1 As String = JsonConvert.SerializeObject(objJMenu)
-                            'If jsonmenu_1.IndexOf("lstMenu") > -1 Then 'found
-                            '    jsonmenu_1 = "[" & modCommon.retrivingSquareBracket(jsonmenu_1) & "]"
-                            'End If
-                            'IO.File.WriteAllText(menufile_1, jsonmenu_1)                                '
+                            End If                            '
                         Catch ex As Exception
                             Diagnostics.Debug.WriteLine("Error: " & vbCrLf & ex.Message)
                             Return
                         End Try
-                        'Read the json menu without refilling the custom map
-                        'Dim isMenuRetrieved As Boolean = modCommon.ReadTheJsonMenu
-                        'If isMenuRetrieved Then
-                        '    RefreshDatagrid(selectedIndex - 1)
-                        'End If
-                        'Return
                     End If
                     'End If
                 Case "copy"

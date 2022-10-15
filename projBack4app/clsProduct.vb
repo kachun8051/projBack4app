@@ -29,6 +29,27 @@ Public Class clsProduct
 
     End Function
 
+    'Public Function myLinearize() As String
+    '    ' Linearize is similiar to Serialize 
+    '    ' Linearize NOT includes objectId
+    '    ' Linearize is used for post or put
+    '    Dim obj As New clsProduct With
+    '    {
+    '        .itemnum = itemnum,
+    '        .itemname = itemname,
+    '        .itemprice = itemprice,
+    '        .itemuom = itemuom,
+    '        .itemstandardweight = itemstandardweight
+    '    }
+    '    Try
+    '        Dim json As String = JsonConvert.SerializeObject(obj)
+    '        Return json
+    '    Catch ex As Exception
+    '        ' Null object
+    '        Return "{}"
+    '    End Try
+    'End Function
+
     Public Function mySerialize() As String
 
         Dim obj As New clsProduct With
@@ -41,7 +62,33 @@ Public Class clsProduct
             .itemuom = itemuom,
             .itemstandardweight = itemstandardweight
         }
-        Return JsonConvert.SerializeObject(obj)
+
+        Try
+            Dim json As String = JsonConvert.SerializeObject(obj)
+            Return json
+        Catch ex As Exception
+            ' Null object
+            Return "{}"
+        End Try
+
+    End Function
+
+    Public Function myDeserialize(ByVal json As String) As Boolean
+        Try
+            Dim obj As clsProduct = JsonConvert.DeserializeObject(Of clsProduct)(json)
+            With obj
+                objectId = .objectId
+                itemnum = .itemnum
+                itemname = .itemname
+                itemname2 = .itemname2
+                itemprice = .itemprice
+                itemuom = .itemuom
+                itemstandardweight = .itemstandardweight
+            End With
+            Return True
+        Catch ex As Exception
+            Return False
+        End Try
 
     End Function
 
