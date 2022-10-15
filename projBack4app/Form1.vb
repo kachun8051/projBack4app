@@ -40,7 +40,6 @@ Public Class Form1
     Private Sub RemoveElementDoneHandler(ByVal isSuccess As Boolean, ByVal itemno As String)
         If isSuccess Then
             objProducts.deleteProductInTheList(itemno)
-
         End If
     End Sub
 
@@ -57,8 +56,8 @@ Public Class Form1
             copiedProduct = Nothing
             Dim objReturn As clsProduct = dlg.getResultingObject
             objProducts.addProductToTheList(objReturn)
-            dgvProduct.DataSource = objProducts.blProduct
-            dgvProduct.Refresh()
+            'dgvProduct.DataSource = objProducts.blProduct
+            'dgvProduct.Refresh()
         End If
     End Sub
 
@@ -112,7 +111,9 @@ Public Class Form1
                         Try
                             Dim styleError As MsgBoxStyle = MsgBoxStyle.OkOnly Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Critical
                             Dim isdeleted As Boolean = Await objProducts.deleteProductData(myitemno)
+                            If isdeleted Then
 
+                            End If
                             'objJMenu.DeleteItByItem(myitemno)
                             'Dim jsonmenu_1 As String = JsonConvert.SerializeObject(objJMenu)
                             'If jsonmenu_1.IndexOf("lstMenu") > -1 Then 'found

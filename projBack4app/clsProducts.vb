@@ -1,6 +1,9 @@
 Imports Newtonsoft
 Imports System.ComponentModel
 Imports System.Net
+Imports System.Net.Http
+Imports System.Net.Http.Headers
+Imports System.Text
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 
 Public Class clsProducts
@@ -86,25 +89,26 @@ Public Class clsProducts
         Dim foundObjectid As String = findObjectIdByItemNum(_itemno)
 
         If foundObjectid = "" Then
-
             Return False
         End If
-
         ' using TLS 1.2
-        System.Net.ServicePointManager.SecurityProtocol = DirectCast(3072, System.Net.SecurityProtocolType)
+        ' System.Net.ServicePointManager.SecurityProtocol = DirectCast(3072, System.Net.SecurityProtocolType)
         Dim myurl As String = "https://parseapi.back4app.com/classes/Product/" & foundObjectid
 
-        Dim web As New WebClient
-        web.Headers.Add(HttpRequestHeader.Accept, "application/json")
-        web.Headers.Add(HttpRequestHeader.ContentType, "application/json")
-        web.Headers.Add("X-Parse-Application-Id", modCommon.AppId)
-        web.Headers.Add("X-Parse-REST-API-Key", modCommon.RestApiKey)
-        web.
-        ' web.Encoding = System.Text.Encoding.UTF8
-        'Add the event handler here
-        'AddHandler web.DownloadStringCompleted, AddressOf webClient_DownloadStringCompleted
+        Dim httpclient As New System.Net.Http.HttpClient
+        Dim request = New HttpRequestMessage(HttpMethod.Delete, myurl)
+
+        request.Headers.Accept.Add(New MediaTypeWithQualityHeaderValue("application/json"))
+        request.Content = New StringContent(String.Empty, Encoding.UTF8, "application/json")
+        request.Headers.Add("X-Parse-Application-Id", modCommon.AppId)
+        request.Headers.Add("X-Parse-REST-API-Key", modCommon.RestApiKey)
+
         Try
-            Dim response As String = Await web.UploadStringTaskAsync(myurl, "DELETE")
+            Dim response = Await httpclient.SendAsync(request).ConfigureAwait(False)
+            If response.StatusCode.Equals(HttpStatusCode.NotFound) Then
+                Return False
+            End If
+            response.EnsureSuccessStatusCode()
             RaiseEvent RemoveElementDone(True, _itemno)
             Return True
         Catch ex As Exception
@@ -112,6 +116,25 @@ Public Class clsProducts
             RaiseEvent RemoveElementDone(False, _itemno)
             Return False
         End Try
+
+        'Dim web As New WebClient
+        'web.Headers.Add(HttpRequestHeader.Accept, "application/json")
+        'web.Headers.Add(HttpRequestHeader.ContentType, "application/json")
+        'web.Headers.Add("X-Parse-Application-Id", modCommon.AppId)
+        'web.Headers.Add("X-Parse-REST-API-Key", modCommon.RestApiKey)
+        'web.
+        '' web.Encoding = System.Text.Encoding.UTF8
+        ''Add the event handler here
+        ''AddHandler web.DownloadStringCompleted, AddressOf webClient_DownloadStringCompleted
+        'Try
+        '    Dim response As String = Await web.UploadStringTaskAsync(myurl, "DELETE")
+        '    RaiseEvent RemoveElementDone(True, _itemno)
+        '    Return True
+        'Catch ex As Exception
+        '    Console.WriteLine("clsProducts.deleteProductData: " & vbCrLf & ex.Message)
+        '    RaiseEvent RemoveElementDone(False, _itemno)
+        '    Return False
+        'End Try
     End Function
 
     Public Function getProductData() As Boolean
