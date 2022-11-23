@@ -10,6 +10,8 @@ Public Class frmMain
     Private lstTableHeader As List(Of String)
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        TabPage1.Text = "Products"
+        TabPage2.Text = "Records"
         btnAdd.Text = "Add Product"
         btnRefresh.Text = "Refresh"
         Me.Text = "Weighting Product System"
@@ -144,4 +146,13 @@ Public Class frmMain
         End If
     End Sub
 
+    Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles TabControl1.SelectedIndexChanged
+        Dim idx As Integer = TabControl1.SelectedIndex
+        Select Case idx
+            Case 0 ' Products page
+
+            Case 1 ' Records page
+
+        End Select
+    End Sub
 End Class

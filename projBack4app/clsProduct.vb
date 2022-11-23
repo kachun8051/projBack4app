@@ -8,6 +8,10 @@ Public Class clsProduct
     ' itemname2 is chinese name of product
     Public Property itemname2 As String
     Public Property itemuom As String
+    Public Property itemuom2 As Int32
+    ' itemuom2 is equivalent gram of itemuom
+    ' For example, itemuom is 100g. Then itemuoms is 100
+    ' itemuom is 1kg. Then itemuom2 is 1000
     Public Property itemstandardweight As Int32
     Public Property itemprice As Decimal
 
@@ -60,9 +64,9 @@ Public Class clsProduct
             .itemname2 = itemname2,
             .itemprice = itemprice,
             .itemuom = itemuom,
+            .itemuom2 = itemuom2,
             .itemstandardweight = itemstandardweight
         }
-
         Try
             Dim json As String = JsonConvert.SerializeObject(obj)
             Return json
@@ -83,6 +87,7 @@ Public Class clsProduct
                 itemname2 = .itemname2
                 itemprice = .itemprice
                 itemuom = .itemuom
+                itemuom2 = .itemuom2
                 itemstandardweight = .itemstandardweight
             End With
             Return True

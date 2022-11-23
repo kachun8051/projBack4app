@@ -4,6 +4,7 @@ Imports Newtonsoft.Json
 Public Class dlgProduct
 
     Private mapUom As Dictionary(Of Int16, String)
+    Private mapUom2 As Dictionary(Of Int16, Int32)
     ' operation is either [show, add, edit]
     Private m_operation As String
     ' For operation show or edit, the obj should not be nothing!
@@ -19,11 +20,12 @@ Public Class dlgProduct
         ' Add any initialization after the InitializeComponent() call.
         m_operation = ""
         m_obj = Nothing
-        mapUom = New Dictionary(Of Short, String)
-        mapUom.Add(0, "Choose uom...")
-        mapUom.Add(1, "100g")
-        mapUom.Add(2, "kg")
-        mapUom.Add(3, "gram")
+
+        mapUom = New Dictionary(Of Short, String) From
+            {{0, "Choose uom..."}, {1, "100g"}, {2, "kg"}, {3, "gram"}}
+        mapUom2 = New Dictionary(Of Short, Int32) From
+            {{0, 0}, {1, 100}, {2, 1000}, {3, 1}}
+        txtUom2.Enabled = False
         cbxUom.Items.Clear()
 
         For Each key_1 As Int16 In mapUom.Keys
@@ -112,6 +114,7 @@ Public Class dlgProduct
             cbxUom.SelectedIndex = getKeyFromValue(m_obj.itemuom)
         End If
         cbxUom.Enabled = False
+        txtUom2.Enabled = False
         txtStdWeight.Enabled = False
         txtPrice.Enabled = False
     End Sub
@@ -136,6 +139,7 @@ Public Class dlgProduct
             .itemname = txtDesc.Text,
             .itemname2 = txtDesc2.Text,
             .itemuom = cbxUom.Text,
+            .itemuom2 = txtUom2.Text,
             .itemstandardweight = txtStdWeight.Text,
             .itemprice = txtPrice.Text
         }
@@ -157,6 +161,7 @@ Public Class dlgProduct
             .itemname = objProduct.itemname,
             .itemname2 = objProduct.itemname2,
             .itemuom = objProduct.itemuom,
+            .itemuom2 = objProduct.itemuom2,
             .itemstandardweight = objProduct.itemstandardweight,
             .itemprice = objProduct.itemprice
          }
@@ -173,6 +178,7 @@ Public Class dlgProduct
             .itemname = txtDesc.Text,
             .itemname2 = txtDesc2.Text,
             .itemuom = cbxUom.Text,
+            .itemuom2 = txtUom2.Text,
             .itemstandardweight = txtStdWeight.Text,
             .itemprice = txtPrice.Text
         }
@@ -191,6 +197,7 @@ Public Class dlgProduct
                 .itemname = objProduct.itemname,
                 .itemname2 = objProduct.itemname2,
                 .itemuom = objProduct.itemuom,
+                .itemuom2 = objProduct.itemuom2,
                 .itemstandardweight = objProduct.itemstandardweight,
                 .itemprice = objProduct.itemprice
              }
@@ -198,4 +205,14 @@ Public Class dlgProduct
         Return ret
     End Function
 
+    Private Sub cbxUom_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxUom.SelectedIndexChanged
+        Dim idx As Integer = cbxUom.SelectedIndex
+        Dim val As Int32 = 0
+        mapUom2.TryGetValue(idx, val)
+        If val = 0 Then
+            txtUom2.Text = ""
+        Else
+            txtUom2.Text = val
+        End If
+    End Sub
 End Class
