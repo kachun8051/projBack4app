@@ -8,7 +8,7 @@ Imports System.Text
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 
 Public Class clsProducts
-    ' blProduct is the data source of datagridview
+    ' blProduct is the data source of datagridview i.e. dgvProduct
     ' Any change(s) to this list would automatically update datagridview i.e. data-binding
     Public Property blProduct As BindingList(Of clsProduct)
 

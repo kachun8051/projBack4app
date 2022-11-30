@@ -79,6 +79,7 @@
     <Compile Include="clsProduct.vb" />
     <Compile Include="clsProducts.vb" />
     <Compile Include="clsRecord.vb" />
+    <Compile Include="clsRecords.vb" />
     <Compile Include="dlgProduct.Designer.vb">
       <DependentUpon>dlgProduct.vb</DependentUpon>
     </Compile>

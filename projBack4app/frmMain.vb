@@ -7,7 +7,10 @@ Public Class frmMain
     ' copiedProduct is copied clsProduct for add used
     Private copiedProduct As clsProduct
 
-    Private lstTableHeader As List(Of String)
+    Public WithEvents objRecords As clsRecords
+
+    Private lstProductTableHeader As List(Of String)
+    Private lstRecordTableHeader As List(Of String)
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         TabPage1.Text = "Products"
@@ -16,26 +19,57 @@ Public Class frmMain
         btnRefresh.Text = "Refresh"
         Me.Text = "Weighting Product System"
         objProducts = New clsProducts
-        AddHandler objProducts.ListFilledDone, AddressOf ListFilledDoneHandler
+        AddHandler objProducts.ListFilledDone, AddressOf ProductListFilledDoneHandler
         ' AddHandler objProducts.RemoveElementDone, AddressOf RemoveElementDoneHandler
         objProducts.getProductData()
-        lstTableHeader = New List(Of String)(
+        objRecords = New clsRecords
+        AddHandler objRecords.ListFilledDone, AddressOf RecordListFilledDoneHandler
+        objRecords.getRecords("")
+        lstProductTableHeader = New List(Of String)(
             {"objectId", "item no.", "Name", "Name2", "Unit", "Std. Weight", "Price"}
+        )
+        lstRecordTableHeader = New List(Of String)(
+            {"objectId", "item no.", "Name", "Name2", "Unit", "Std. Weight", "Price", "Weight", "Selling Price", "Packing Date"}
         )
     End Sub
 
-    Private Sub ListFilledDoneHandler(ByVal isSuccess As Boolean)
+    Private Sub ProductListFilledDoneHandler(ByVal isSuccess As Boolean)
         If isSuccess Then
             dgvProduct.DataSource = objProducts.blProduct  'dtProduct
-            For i As Int16 = 0 To lstTableHeader.Count - 1
-                Me.dgvProduct.Columns(i).HeaderText = lstTableHeader(i)
+            For i As Int16 = 0 To lstProductTableHeader.Count - 1
+                Me.dgvProduct.Columns(i).HeaderText = lstProductTableHeader(i)
             Next
-            Me.dgvProduct.Columns(0).Visible = False ' objectId is invisible
-            Me.dgvProduct.Columns(1).Width = 100 ' Item No.
-            Me.dgvProduct.Columns(2).Width = 200 ' Name
-            Me.dgvProduct.Columns(3).Width = 200 ' Name2
-            Me.dgvProduct.Columns(5).Width = 130 'Std. Weight
-            Me.dgvProduct.Columns(6).Width = 80
+            With Me.dgvProduct
+                .Columns(0).Visible = False ' objectId is invisible
+                .Columns(1).Width = 100 ' Item No.
+                .Columns(2).Width = 200 ' Name
+                .Columns(3).Width = 200 ' Name2
+                .Columns(4).Width = 200 ' Unit
+                .Columns(5).Width = 130 ' Std. Weight
+                .Columns(6).Width = 80
+            End With
+
+        End If
+    End Sub
+
+    Private Sub RecordListFilledDoneHandler(ByVal isSuccess As Boolean)
+        If isSuccess Then
+            dgvProductionRecord.DataSource = objRecords.blRecord
+            For i As Int32 = 0 To lstRecordTableHeader.Count - 1
+                Me.dgvProductionRecord.Columns(i).HeaderText = lstRecordTableHeader(i)
+            Next
+            With Me.dgvProductionRecord
+                .Columns(0).Visible = False ' objectId is invisible
+                .Columns(1).Width = 100 ' Item No.
+                .Columns(2).Width = 200 ' Name
+                .Columns(3).Width = 200 ' Name 2
+                .Columns(4).Width = 200 ' Unit
+                .Columns(5).Width = 130 ' Std. Weight
+                .Columns(6).Visible = False ' Price
+                .Columns(7).Width = 100 ' Weight
+                .Columns(8).Width = 200 ' Selling Price
+                .Columns(9).Width = 200 ' Packing Date
+            End With
         End If
     End Sub
 
@@ -57,7 +91,7 @@ Public Class frmMain
 
     Private Sub btnRefresh_Click(sender As Object, e As EventArgs) Handles btnRefresh.Click
         objProducts = New clsProducts
-        AddHandler objProducts.ListFilledDone, AddressOf ListFilledDoneHandler
+        AddHandler objProducts.ListFilledDone, AddressOf ProductListFilledDoneHandler
         objProducts.getProductData()
     End Sub
 
