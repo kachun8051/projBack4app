@@ -29,7 +29,7 @@ Public Class frmMain
             {"objectId", "item no.", "Name", "Name2", "Unit", "Std. Weight", "Price"}
         )
         lstRecordTableHeader = New List(Of String)(
-            {"objectId", "item no.", "Name", "Name2", "Unit", "Std. Weight", "Price", "Weight", "Selling Price", "Packing Date"}
+            {"objectId", "item no.", "Name", "Name2", "Unit", "Std. Weight", "Price", "Weight", "Selling Price", "Barcode", "Packing Date"}
         )
     End Sub
 
@@ -68,7 +68,8 @@ Public Class frmMain
                 .Columns(6).Visible = False ' Price
                 .Columns(7).Width = 100 ' Weight
                 .Columns(8).Width = 200 ' Selling Price
-                .Columns(9).Width = 200 ' Packing Date
+                .Columns(9).Width = 200 ' Barcode
+                .Columns(10).Width = 200 ' Packing Date
             End With
         End If
     End Sub

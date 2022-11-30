@@ -1,10 +1,18 @@
 ﻿Public Class clsRecord
     Public Property objectId As String
-    Public Property objProduct As clsProduct
-    Public Property weightInGram As Decimal
-    Public Property sellingPrice As Decimal
+    Public Property itemnum As String
+    Public Property itemname As String
+    Public Property itemname2 As String
+    Public Property itemuom As String
+    Public Property itemstandardweight As Int32
+    Public Property itemprice As Decimal
+    Public Property weightingram As Decimal
+    Public Property sellingprice As Decimal
     Public Property barcode As String
-    Public Property packingDt As String
+    Public Property packingdt As String
+
+    ' Public Property objProduct As clsProduct
+
 
     Public Function mySerialize() As String
 

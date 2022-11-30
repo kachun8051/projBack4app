@@ -16,13 +16,23 @@ Public Class clsRecords
 
     Public Event ListFilledDone(ByVal isSuccess As Boolean)
 
+    Private Function getParam(i_date As String) As String
+        Dim jobj_1 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
+        jobj_1.Add("$gte", "13/11/2022 00:00:00+8:00")
+        jobj_1.Add("$lt", "14/11/2022 00:00:00+8:00")
+        Dim jobj_2 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
+        jobj_2.Add("packingdt", jobj_1)
+        Dim str As String = jobj_2.ToString(Json.Formatting.None)
+        Diagnostics.Debug.WriteLine(str)
+        Return str
+    End Function
+
     Public Function getRecords(whichdate As String) As Boolean
 
         ' using TLS 1.2
         ' System.Net.ServicePointManager.SecurityProtocol = DirectCast(3072, System.Net.SecurityProtocolType)
         Dim myurl As String = "https://parseapi.back4app.com/classes/Production?" &
-            String.Format("where={""packingdt"":{""{0}gt"":""{1}"",""{2}lt"":""{3}""}}",
-                          Chr(36), "23/11/2022 00:00:00+08:00", Chr(36), "24/11/2022 00:00:00+08:00")
+            "where=" & getParam("") & "&order=itemnum"
         Dim web As New WebClient
         web.Headers.Add(HttpRequestHeader.Accept, "application/json")
         web.Headers.Add(HttpRequestHeader.ContentType, "application/json")
