@@ -10,6 +10,14 @@
     Public Property sellingprice As Decimal
     Public Property barcode As String
     Public Property packingdt As String
+        Get
+            Dim tmp As String = packingdt.Substring(0, 19)
+            Return
+        End Get
+        Set(value As String)
+
+        End Set
+    End Property
 
     ' Public Property objProduct As clsProduct
 

@@ -28,11 +28,12 @@ Partial Class frmMain
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.dgvProductionRecord = New System.Windows.Forms.DataGridView()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.dtpProduction = New System.Windows.Forms.DateTimePicker()
         Me.btnRecordRefresh = New System.Windows.Forms.Button()
         Me.btnRecordDelete = New System.Windows.Forms.Button()
+        Me.dtpProduction = New System.Windows.Forms.DateTimePicker()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.dgvProductionRecord = New System.Windows.Forms.DataGridView()
+        Me.btnSearch = New System.Windows.Forms.Button()
         CType(Me.dgvProduct, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
@@ -102,6 +103,7 @@ Partial Class frmMain
         '
         'TabPage2
         '
+        Me.TabPage2.Controls.Add(Me.btnSearch)
         Me.TabPage2.Controls.Add(Me.btnRecordRefresh)
         Me.TabPage2.Controls.Add(Me.btnRecordDelete)
         Me.TabPage2.Controls.Add(Me.dtpProduction)
@@ -114,38 +116,6 @@ Partial Class frmMain
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "TabPage2"
         Me.TabPage2.UseVisualStyleBackColor = True
-        '
-        'dgvProductionRecord
-        '
-        Me.dgvProductionRecord.AllowUserToAddRows = False
-        Me.dgvProductionRecord.AllowUserToDeleteRows = False
-        Me.dgvProductionRecord.AllowUserToOrderColumns = True
-        Me.dgvProductionRecord.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvProductionRecord.Location = New System.Drawing.Point(6, 50)
-        Me.dgvProductionRecord.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.dgvProductionRecord.Name = "dgvProductionRecord"
-        Me.dgvProductionRecord.ReadOnly = True
-        Me.dgvProductionRecord.RowHeadersWidth = 51
-        Me.dgvProductionRecord.RowTemplate.Height = 27
-        Me.dgvProductionRecord.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvProductionRecord.Size = New System.Drawing.Size(1188, 406)
-        Me.dgvProductionRecord.TabIndex = 2
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(15, 13)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(160, 23)
-        Me.Label1.TabIndex = 3
-        Me.Label1.Text = "Production Date:"
-        '
-        'dtpProduction
-        '
-        Me.dtpProduction.Location = New System.Drawing.Point(195, 10)
-        Me.dtpProduction.Name = "dtpProduction"
-        Me.dtpProduction.Size = New System.Drawing.Size(200, 35)
-        Me.dtpProduction.TabIndex = 4
         '
         'btnRecordRefresh
         '
@@ -166,6 +136,47 @@ Partial Class frmMain
         Me.btnRecordDelete.TabIndex = 5
         Me.btnRecordDelete.Text = "btnRecordDelete"
         Me.btnRecordDelete.UseVisualStyleBackColor = True
+        '
+        'dtpProduction
+        '
+        Me.dtpProduction.Location = New System.Drawing.Point(195, 7)
+        Me.dtpProduction.Name = "dtpProduction"
+        Me.dtpProduction.Size = New System.Drawing.Size(200, 35)
+        Me.dtpProduction.TabIndex = 4
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(15, 13)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(160, 23)
+        Me.Label1.TabIndex = 3
+        Me.Label1.Text = "Production Date:"
+        '
+        'dgvProductionRecord
+        '
+        Me.dgvProductionRecord.AllowUserToAddRows = False
+        Me.dgvProductionRecord.AllowUserToDeleteRows = False
+        Me.dgvProductionRecord.AllowUserToOrderColumns = True
+        Me.dgvProductionRecord.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvProductionRecord.Location = New System.Drawing.Point(6, 50)
+        Me.dgvProductionRecord.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.dgvProductionRecord.Name = "dgvProductionRecord"
+        Me.dgvProductionRecord.ReadOnly = True
+        Me.dgvProductionRecord.RowHeadersWidth = 51
+        Me.dgvProductionRecord.RowTemplate.Height = 27
+        Me.dgvProductionRecord.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvProductionRecord.Size = New System.Drawing.Size(1188, 406)
+        Me.dgvProductionRecord.TabIndex = 2
+        '
+        'btnSearch
+        '
+        Me.btnSearch.Location = New System.Drawing.Point(401, 8)
+        Me.btnSearch.Name = "btnSearch"
+        Me.btnSearch.Size = New System.Drawing.Size(95, 32)
+        Me.btnSearch.TabIndex = 7
+        Me.btnSearch.Text = "Search"
+        Me.btnSearch.UseVisualStyleBackColor = True
         '
         'frmMain
         '
@@ -198,4 +209,5 @@ Partial Class frmMain
     Friend WithEvents dtpProduction As DateTimePicker
     Friend WithEvents Label1 As Label
     Friend WithEvents dgvProductionRecord As DataGridView
+    Friend WithEvents btnSearch As Button
 End Class

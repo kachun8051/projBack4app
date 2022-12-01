@@ -16,23 +16,33 @@ Public Class clsRecords
 
     Public Event ListFilledDone(ByVal isSuccess As Boolean)
 
-    Private Function getParam(i_date As String) As String
+    ' The input date MUST be in format yyyyMMdd
+    Private Function getParam(i_date As Date) As String
+        'Dim str As String = i_date.Substring(0, 4) & "-" & i_date.Substring(4, 6) & i_date.Substring(6)
+        'Dim today_1 As Date = i_date
+        Dim tomorrow_1 As Date = i_date.AddDays(1)
+        Dim strtoday As String = i_date.Day.ToString.PadLeft(2, "0"c) & "/" &
+            i_date.Month.ToString.PadLeft(2, "0"c) & "/" &
+            i_date.Year.ToString.PadLeft(4, "0"c) & " 00:00:00+8:00"
+        Dim strTomorrow As String = tomorrow_1.Day.ToString.PadLeft(2, "0"c) & "/" &
+            tomorrow_1.Month.ToString.PadLeft(2, "0"c) & "/" &
+            tomorrow_1.Year.ToString.PadLeft(4, "0"c) & " 00:00:00+8:00"
         Dim jobj_1 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
-        jobj_1.Add("$gte", "13/11/2022 00:00:00+8:00")
-        jobj_1.Add("$lt", "14/11/2022 00:00:00+8:00")
+        jobj_1.Add("$gte", strtoday)
+        jobj_1.Add("$lt", strTomorrow)
         Dim jobj_2 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
         jobj_2.Add("packingdt", jobj_1)
-        Dim str As String = jobj_2.ToString(Json.Formatting.None)
-        Diagnostics.Debug.WriteLine(str)
-        Return str
+        Dim strOutput As String = jobj_2.ToString(Json.Formatting.None)
+        Diagnostics.Debug.WriteLine(strOutput)
+        Return strOutput
     End Function
 
-    Public Function getRecords(whichdate As String) As Boolean
-
+    ' the input date MUST be in Date type
+    Public Function getRecords(whichdate As Date) As Boolean
         ' using TLS 1.2
         ' System.Net.ServicePointManager.SecurityProtocol = DirectCast(3072, System.Net.SecurityProtocolType)
         Dim myurl As String = "https://parseapi.back4app.com/classes/Production?" &
-            "where=" & getParam("") & "&order=itemnum"
+            "where=" & getParam(whichdate) & "&order=itemnum"
         Dim web As New WebClient
         web.Headers.Add(HttpRequestHeader.Accept, "application/json")
         web.Headers.Add(HttpRequestHeader.ContentType, "application/json")

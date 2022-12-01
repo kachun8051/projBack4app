@@ -24,7 +24,8 @@ Public Class frmMain
         objProducts.getProductData()
         objRecords = New clsRecords
         AddHandler objRecords.ListFilledDone, AddressOf RecordListFilledDoneHandler
-        objRecords.getRecords("")
+        dtpProduction.Value = DateTime.Today
+        objRecords.getRecords(dtpProduction.Value)
         lstProductTableHeader = New List(Of String)(
             {"objectId", "item no.", "Name", "Name2", "Unit", "Std. Weight", "Price"}
         )
@@ -189,5 +190,11 @@ Public Class frmMain
             Case 1 ' Records page
 
         End Select
+    End Sub
+
+    Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click
+        'Private Sub dtpProduction_ValueChanged(sender As Object, e As EventArgs) Handles dtpProduction.ValueChanged
+        objRecords.getRecords(dtpProduction.Value)
+        'End Sub
     End Sub
 End Class
