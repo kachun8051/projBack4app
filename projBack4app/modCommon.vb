@@ -7,6 +7,22 @@ Module modCommon
 
     Public Const RestApiKey As String = "sgyDDR9YYlvTfkZv1datnUu75nhnnjqejm2yMFNL"
 
+    Public Function FirstDayOfMonth(dt As Date) As Date
+
+    End Function
+
+    Public Function LastDayOfMonth(dt As Date) As Date
+
+    End Function
+
+    Public Function FirstDayOfWeek(dt As Date) As Date
+
+    End Function
+
+    Public Function LastDayOfWeek(dt As Date) As Date
+
+    End Function
+
     'Public Function ReadTheProductList() As Boolean
     '    Try
     '        Dim json As String = File.ReadAllText(pathOfMenu & "\labels.json")

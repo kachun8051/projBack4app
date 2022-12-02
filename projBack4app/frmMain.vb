@@ -2,12 +2,14 @@
 Imports Newtonsoft
 Public Class frmMain
 
-    ' objProducts holds list of clsProduct
+    ' objProducts holds list of clsProduct for tab#1
     Public WithEvents objProducts As clsProducts
     ' copiedProduct is copied clsProduct for add used
     Private copiedProduct As clsProduct
-
+    ' objRecords holds list of clsRecords for tab#2
     Public WithEvents objRecords As clsRecords
+    ' objRangeRecords holds list of clsRecords for tab#3
+    Public WithEvents objRangeRecords As clsRecords
 
     Private lstProductTableHeader As List(Of String)
     Private lstRecordTableHeader As List(Of String)
@@ -188,6 +190,8 @@ Public Class frmMain
             Case 0 ' Products page
 
             Case 1 ' Records page
+
+            Case 2 ' Records in Date Range
 
         End Select
     End Sub
