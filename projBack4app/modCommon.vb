@@ -8,19 +8,38 @@ Module modCommon
     Public Const RestApiKey As String = "sgyDDR9YYlvTfkZv1datnUu75nhnnjqejm2yMFNL"
 
     Public Function FirstDayOfMonth(dt As Date) As Date
-
+        Dim dtFirst As Date = New Date(dt.Year, dt.Month, 1)
+        Return dtFirst
     End Function
 
     Public Function LastDayOfMonth(dt As Date) As Date
-
+        Dim dtFirst As Date = New Date(dt.Year, dt.Month, 1)
+        Dim dtLast As Date = dtFirst.AddMonths(1).AddDays(-1)
+        Return dtLast
     End Function
 
     Public Function FirstDayOfWeek(dt As Date) As Date
-
+        ' Sunday is 0, Monday is 1, and so on
+        Dim dtMonday As Date = dt
+        For i As Int16 = 0 To 6
+            If dtMonday.DayOfWeek = 1 Then
+                Exit For
+            End If
+            dtMonday = dtMonday.AddDays(-1)
+        Next
+        Return dtMonday
     End Function
 
     Public Function LastDayOfWeek(dt As Date) As Date
-
+        ' Sunday is 0, Monday is 1, and so on
+        Dim dtSunday As Date = dt
+        For i As Int16 = 0 To 6
+            If dtSunday.DayOfWeek = 0 Then
+                Exit For
+            End If
+            dtSunday = dtSunday.AddDays(1)
+        Next
+        Return dtSunday
     End Function
 
     'Public Function ReadTheProductList() As Boolean
