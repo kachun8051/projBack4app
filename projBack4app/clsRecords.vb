@@ -40,18 +40,26 @@ Public Class clsRecords
     End Function
 
     Private Function getParams(i_from As Date, i_to As Date) As String
-        Dim dtFrom As String = i_from.Day.ToString.PadLeft(2, "0"c) & "/" &
-            i_from.Month.ToString.PadLeft(2, "0"c) & "/" &
-            i_from.Year.ToString.PadLeft(4, "0"c) & " 00:00:00+8:00"
+        Dim dtFrom As String = i_from.Year.ToString.PadLeft(4, "0"c) & "-" &
+            i_from.Month.ToString.PadLeft(2, "0"c) & "-" &
+            i_from.Day.ToString.PadLeft(2, "0"c) & "T00:00:00+08:00"
         Dim tomorrow_2 As Date = i_to.AddDays(1)
-        Dim dtTo As String = tomorrow_2.Day.ToString.PadLeft(2, "0"c) & "/" &
-            tomorrow_2.Month.ToString.PadLeft(2, "0"c) & "/" &
-            tomorrow_2.Year.ToString.PadLeft(4, "0"c) & " 00:00:00+8:00"
+        Dim dtTo As String = tomorrow_2.Year.ToString.PadLeft(4, "0"c) & "-" &
+            tomorrow_2.Month.ToString.PadLeft(2, "0"c) & "-" &
+            tomorrow_2.Day.ToString.PadLeft(2, "0"c) & "T00:00:00+08:00"
+        Dim jobj_3F As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
+        jobj_3F.Add("__type", "Date")
+        jobj_3F.Add("iso", dtFrom)
+
+        Dim jobj_3T As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
+        jobj_3T.Add("__type", "Date")
+        jobj_3T.Add("iso", dtTo)
+
         Dim jobj_1 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
-        jobj_1.Add("$gte", dtFrom)
-        jobj_1.Add("$lt", dtTo)
+        jobj_1.Add("$gte", i_from & "+08:00")
+        jobj_1.Add("$lt", i_to & "+08:00")
         Dim jobj_2 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
-        jobj_2.Add("packingdt", jobj_1)
+        jobj_2.Add("updatedAt", jobj_1)
         Dim strOutput As String = jobj_2.ToString(Json.Formatting.None)
         Diagnostics.Debug.WriteLine(strOutput)
         Return strOutput
@@ -83,11 +91,13 @@ Public Class clsRecords
 
     End Function
 
+    ' https://stackoverflow.com/questions/30327847/how-to-pass-current-date-to-a-curl-query-using-shell-script
     Public Function getRangeRecords(fromdate As Date, todate As Date) As Boolean
         ' using TLS 1.2
         ' System.Net.ServicePointManager.SecurityProtocol = DirectCast(3072, System.Net.SecurityProtocolType)
         Dim myurl As String = "https://parseapi.back4app.com/classes/Production?" &
-            "where=" & getParams(fromdate, todate) & "&order=itemnum"
+            "where=" & getParams(fromdate, todate) & "&order=updatedAt"
+        Diagnostics.Debug.WriteLine("Url: " & myurl)
         Dim web As New WebClient
         web.Headers.Add(HttpRequestHeader.Accept, "application/json")
         web.Headers.Add(HttpRequestHeader.ContentType, "application/json")
