@@ -103,7 +103,8 @@ Public Class frmMain
                 Me.dgvRangeRecords.Columns(j).HeaderText = lstRecordTableHeader(j)
             Next
             With Me.dgvRangeRecords
-                .Columns("objectId").Visible = False ' objectId is invisible
+                ' objectId is invisible
+                .Columns("objectId").Visible = False
                 .Columns("packingdt").Width = 200 ' Packing Date
                 .Columns("itemnum").Width = 100 ' Item No.
                 .Columns("itemname").Width = 200 ' Name
@@ -273,4 +274,5 @@ Public Class frmMain
     Private Sub btnRangeSearch_Click(sender As Object, e As EventArgs) Handles btnRangeSearch.Click
         objRangeRecords.getRangeRecords(dtpFrom.Value, dtpTo.Value)
     End Sub
+
 End Class

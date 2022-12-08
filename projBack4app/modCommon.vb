@@ -42,6 +42,13 @@ Module modCommon
         Return dtSunday
     End Function
 
+    ' Return positive or negative number
+    Public Function getTimeZone() As Int32
+        Dim tzi As TimeZoneInfo = TimeZoneInfo.Local
+        Dim offset As TimeSpan = tzi.BaseUtcOffset
+        Return offset.Hours
+    End Function
+
     'Public Function ReadTheProductList() As Boolean
     '    Try
     '        Dim json As String = File.ReadAllText(pathOfMenu & "\labels.json")

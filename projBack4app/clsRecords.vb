@@ -18,51 +18,59 @@ Public Class clsRecords
 
     Public Event RangeListFilledDone(ByVal isSuccess As Boolean)
 
-    ' The input date MUST be in format yyyyMMdd
+    Private Function getISODate(i_date As Date) As String
+        Dim timeZoneHour As Int32 = modCommon.getTimeZone
+        Dim strdt As String = i_date.Year.ToString.PadLeft(4, "0"c) & "-" &
+            i_date.Month.ToString.PadLeft(2, "0"c) & "-" &
+            i_date.Day.ToString.PadLeft(2, "0"c)
+        Dim dt As Date = DateTime.Parse(strdt)
+        dt = dt.AddHours(-timeZoneHour)
+        Dim dt_1 As String = dt.ToString("yyyy-MM-dd HH:mm:ss").Replace(" ", "T") & "Z"
+        Diagnostics.Debug.WriteLine("ISO Date: " & dt_1)
+        Return dt_1
+    End Function
+
     Private Function getParam(i_date As Date) As String
-        'Dim str As String = i_date.Substring(0, 4) & "-" & i_date.Substring(4, 6) & i_date.Substring(6)
-        'Dim today_1 As Date = i_date
-        Dim tomorrow_1 As Date = i_date.AddDays(1)
-        Dim strtoday As String = i_date.Day.ToString.PadLeft(2, "0"c) & "/" &
-            i_date.Month.ToString.PadLeft(2, "0"c) & "/" &
-            i_date.Year.ToString.PadLeft(4, "0"c) & " 00:00:00+8:00"
-        Dim strTomorrow As String = tomorrow_1.Day.ToString.PadLeft(2, "0"c) & "/" &
-            tomorrow_1.Month.ToString.PadLeft(2, "0"c) & "/" &
-            tomorrow_1.Year.ToString.PadLeft(4, "0"c) & " 00:00:00+8:00"
+
+        Dim jobj_1a As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
+        jobj_1a.Add("__type", "Date")
+        jobj_1a.Add("iso", getISODate(i_date))
+
+        Dim jobj_1b As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
+        jobj_1b.Add("__type", "Date")
+        jobj_1b.Add("iso", getISODate(i_date.AddDays(1)))
+
         Dim jobj_1 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
-        jobj_1.Add("$gte", strtoday)
-        jobj_1.Add("$lt", strTomorrow)
+        jobj_1.Add("$gte", jobj_1a)
+        jobj_1.Add("$lt", jobj_1b)
         Dim jobj_2 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
-        jobj_2.Add("packingdt", jobj_1)
+        jobj_2.Add("packedAt", jobj_1)
         Dim strOutput As String = jobj_2.ToString(Json.Formatting.None)
         Diagnostics.Debug.WriteLine(strOutput)
         Return strOutput
     End Function
 
     Private Function getParams(i_from As Date, i_to As Date) As String
-        Dim dtFrom As String = i_from.Year.ToString.PadLeft(4, "0"c) & "-" &
-            i_from.Month.ToString.PadLeft(2, "0"c) & "-" &
-            i_from.Day.ToString.PadLeft(2, "0"c) & "T00:00:00+08:00"
-        Dim tomorrow_2 As Date = i_to.AddDays(1)
-        Dim dtTo As String = tomorrow_2.Year.ToString.PadLeft(4, "0"c) & "-" &
-            tomorrow_2.Month.ToString.PadLeft(2, "0"c) & "-" &
-            tomorrow_2.Day.ToString.PadLeft(2, "0"c) & "T00:00:00+08:00"
-        Dim jobj_3F As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
-        jobj_3F.Add("__type", "Date")
-        jobj_3F.Add("iso", dtFrom)
 
-        Dim jobj_3T As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
-        jobj_3T.Add("__type", "Date")
-        jobj_3T.Add("iso", dtTo)
+        If isTwoDatesEqual(i_from, i_to) Then
+            Return getParam(i_from)
+        Else
+            Dim jobj_3F As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
+            jobj_3F.Add("__type", "Date")
+            jobj_3F.Add("iso", getISODate(i_from))
+            Dim jobj_3T As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
+            jobj_3T.Add("__type", "Date")
+            jobj_3T.Add("iso", getISODate(i_to))
+            Dim jobj_1 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
+            jobj_1.Add("$gte", jobj_3F)
+            jobj_1.Add("$lt", jobj_3T)
+            Dim jobj_2 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
+            jobj_2.Add("packedAt", jobj_1)
+            Dim strOutput As String = jobj_2.ToString(Json.Formatting.None)
+            Diagnostics.Debug.WriteLine(strOutput)
+            Return strOutput
+        End If
 
-        Dim jobj_1 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
-        jobj_1.Add("$gte", i_from & "+08:00")
-        jobj_1.Add("$lt", i_to & "+08:00")
-        Dim jobj_2 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
-        jobj_2.Add("updatedAt", jobj_1)
-        Dim strOutput As String = jobj_2.ToString(Json.Formatting.None)
-        Diagnostics.Debug.WriteLine(strOutput)
-        Return strOutput
     End Function
 
     ' the input date MUST be in Date type
@@ -70,7 +78,7 @@ Public Class clsRecords
         ' using TLS 1.2
         ' System.Net.ServicePointManager.SecurityProtocol = DirectCast(3072, System.Net.SecurityProtocolType)
         Dim myurl As String = "https://parseapi.back4app.com/classes/Production?" &
-            "where=" & getParam(whichdate) & "&order=itemnum"
+            "where=" & getParam(whichdate) & "&order=pickedAt"
         Dim web As New WebClient
         web.Headers.Add(HttpRequestHeader.Accept, "application/json")
         web.Headers.Add(HttpRequestHeader.ContentType, "application/json")
@@ -96,7 +104,7 @@ Public Class clsRecords
         ' using TLS 1.2
         ' System.Net.ServicePointManager.SecurityProtocol = DirectCast(3072, System.Net.SecurityProtocolType)
         Dim myurl As String = "https://parseapi.back4app.com/classes/Production?" &
-            "where=" & getParams(fromdate, todate) & "&order=updatedAt"
+            "where=" & getParams(fromdate, todate) & "&order=pickedAt"
         Diagnostics.Debug.WriteLine("Url: " & myurl)
         Dim web As New WebClient
         web.Headers.Add(HttpRequestHeader.Accept, "application/json")
@@ -115,6 +123,19 @@ Public Class clsRecords
             RaiseEvent RangeListFilledDone(False)
             Return False
         End Try
+    End Function
+
+    Private Function isTwoDatesEqual(dt1 As Date, dt2 As Date) As Boolean
+        If dt1.Year <> dt2.Year Then
+            Return False
+        End If
+        If dt1.Month <> dt2.Month Then
+            Return False
+        End If
+        If dt1.Day <> dt2.Day Then
+            Return False
+        End If
+        Return True
     End Function
 
     ' event handler of web client inside function getProductData().

@@ -9,7 +9,6 @@
     Public Property weightingram As Decimal
     Public Property sellingprice As Decimal
     Public Property barcode As String
-
     Public Property packingdt As String
 
     'Public Property packingdt As String
