@@ -3,20 +3,20 @@ Imports System.Net
 Imports Newtonsoft
 
 Public Class clsRecords
+
+    Public Event ListFilledDone(ByVal isSuccess As Boolean)
+
+    Public Event RangeListFilledDone(ByVal isSuccess As Boolean)
+
     ' blRecord is the data source of datagridview i.e. dgvProductionRecord
     ' Any change(s) to this list would automatically update datagridview i.e. data-binding
     Public Property blRecord As BindingList(Of clsRecord)
-
     Public Property newobjectId As String
 
     Public Sub New()
         blRecord = New BindingList(Of clsRecord)
         newobjectId = ""
     End Sub
-
-    Public Event ListFilledDone(ByVal isSuccess As Boolean)
-
-    Public Event RangeListFilledDone(ByVal isSuccess As Boolean)
 
     Private Function getISODate(i_date As Date) As String
         Dim timeZoneHour As Int32 = modCommon.getTimeZone
@@ -31,20 +31,21 @@ Public Class clsRecords
     End Function
 
     Private Function getParam(i_date As Date) As String
-
-        Dim jobj_1a As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
-        jobj_1a.Add("__type", "Date")
-        jobj_1a.Add("iso", getISODate(i_date))
-
-        Dim jobj_1b As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
-        jobj_1b.Add("__type", "Date")
-        jobj_1b.Add("iso", getISODate(i_date.AddDays(1)))
-
-        Dim jobj_1 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
-        jobj_1.Add("$gte", jobj_1a)
-        jobj_1.Add("$lt", jobj_1b)
-        Dim jobj_2 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
-        jobj_2.Add("packedAt", jobj_1)
+        Dim jobj_1a As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject From {
+            {"__type", "Date"},
+            {"iso", getISODate(i_date)}
+        }
+        Dim jobj_1b As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject From {
+            {"__type", "Date"},
+            {"iso", getISODate(i_date.AddDays(1))}
+        }
+        Dim jobj_1 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject From {
+            {"$gte", jobj_1a},
+            {"$lt", jobj_1b}
+        }
+        Dim jobj_2 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject From {
+            {"packedAt", jobj_1}
+        }
         Dim strOutput As String = jobj_2.ToString(Json.Formatting.None)
         Diagnostics.Debug.WriteLine(strOutput)
         Return strOutput
@@ -55,17 +56,21 @@ Public Class clsRecords
         If isTwoDatesEqual(i_from, i_to) Then
             Return getParam(i_from)
         Else
-            Dim jobj_3F As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
-            jobj_3F.Add("__type", "Date")
-            jobj_3F.Add("iso", getISODate(i_from))
-            Dim jobj_3T As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
-            jobj_3T.Add("__type", "Date")
-            jobj_3T.Add("iso", getISODate(i_to))
-            Dim jobj_1 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
-            jobj_1.Add("$gte", jobj_3F)
-            jobj_1.Add("$lt", jobj_3T)
-            Dim jobj_2 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject()
-            jobj_2.Add("packedAt", jobj_1)
+            Dim jobj_3F As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject From {
+                {"__type", "Date"},
+                {"iso", getISODate(i_from)}
+            }
+            Dim jobj_3T As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject From {
+                {"__type", "Date"},
+                {"iso", getISODate(i_to)}
+            }
+            Dim jobj_1 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject From {
+                {"$gte", jobj_3F},
+                {"$lt", jobj_3T}
+            }
+            Dim jobj_2 As Newtonsoft.Json.Linq.JObject = New Newtonsoft.Json.Linq.JObject From {
+                {"packedAt", jobj_1}
+            }
             Dim strOutput As String = jobj_2.ToString(Json.Formatting.None)
             Diagnostics.Debug.WriteLine(strOutput)
             Return strOutput

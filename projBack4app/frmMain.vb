@@ -8,8 +8,8 @@ Public Class frmMain
     Private copiedProduct As clsProduct
     ' objRecords holds list of clsRecords for tab#2
     Public WithEvents objRecords As clsRecords
-    ' objRangeRecords holds list of clsRecords for tab#3
-    Public WithEvents objRangeRecords As clsRecords
+    ' objFetchData holds list of clsRecords for tab#3
+    Private WithEvents objFetchData As clsFetchData
 
     Private lstProductTableHeader As List(Of String)
     Private lstRecordTableHeader As List(Of String)
@@ -21,6 +21,7 @@ Public Class frmMain
         TabPage3.Text = "Reports"
         btnAdd.Text = "Add Product"
         btnRefresh.Text = "Refresh"
+        lblDateRange.Text = ""
         Me.Text = "Weighting Product System"
 
         objProducts = New clsProducts
@@ -33,8 +34,8 @@ Public Class frmMain
         dtpProduction.Value = DateTime.Today
         objRecords.getRecords(dtpProduction.Value)
 
-        objRangeRecords = New clsRecords
-        AddHandler objRangeRecords.RangeListFilledDone, AddressOf RangeRecordListFilledDoneHandler
+        objFetchData = New clsFetchData
+        AddHandler objFetchData.DataDownloaded, AddressOf DataDownloadedHandler
 
         lstProductTableHeader = New List(Of String)(
             {"objectId", "item no.", "Name", "Name2", "Unit", "Std. Weight", "Price"}
@@ -42,15 +43,10 @@ Public Class frmMain
         lstRecordTableHeader = New List(Of String)(
             {"objectId", "item no.", "Name", "Name2", "Unit", "Std. Weight", "Price", "Weight", "Selling Price", "Barcode", "Packing Date"}
         )
+        lstPeriodTableHeader = New List(Of String)(
+            {"objectId", "Packing Date", "item no.", "Name", "Name2", "Unit", "Std. Weight", "Price", "Weight", "Selling Price", "Barcode"}
+        )
 
-        'lstPeriodTableHeader = New List(Of String)(
-        '    {"objectId", "Packing Date", "item no.", "Name", "Name2", "Unit", "Std. Weight", "Price", "Weight", "Selling Price", "Barcode"}
-        ')
-        Dim lstPeriod As List(Of String) = New List(Of String)({"Period...", "Monthly", "Weekly", "Daily"})
-        For Each str As String In lstPeriod
-            cbxPeriod.Items.Add(str)
-        Next
-        cbxPeriod.SelectedIndex = 0
     End Sub
 
     Private Sub ProductListFilledDoneHandler(ByVal isSuccess As Boolean)
@@ -68,7 +64,6 @@ Public Class frmMain
                 .Columns(5).Width = 130 ' Std. Weight
                 .Columns(6).Width = 80
             End With
-
         End If
     End Sub
 
@@ -94,9 +89,16 @@ Public Class frmMain
         End If
     End Sub
 
-    Private Sub RangeRecordListFilledDoneHandler(ByVal isSuccess As Boolean)
+    Private Sub DataDownloadedHandler(isSuccess As Boolean, rptType As Int16)
+        'If isSuccess Then
+        '    Dim objReport As clsReport = New clsReport
+        '    With objFetchData
+        '        objReport.setParams(.startDate, .endDate, .rangeType)
+        '    End With
+        '    objReport.ShowReport(objFetchData.blRecord, rptType)
+        'End If
         If isSuccess Then
-            dgvRangeRecords.DataSource = objRangeRecords.blRecord
+            dgvRangeRecords.DataSource = objFetchData.blRecord
             Me.dgvRangeRecords.Columns("packingdt").ValueType = GetType(Date)
             Me.dgvRangeRecords.Columns("packingdt").DefaultCellStyle.Format = "yyyy/MM/dd hh:mm:ss"
             For j As Int32 = 0 To lstRecordTableHeader.Count - 1
@@ -130,6 +132,43 @@ Public Class frmMain
 
         End If
     End Sub
+
+    'Private Sub RangeRecordListFilledDoneHandler(ByVal isSuccess As Boolean)
+    '    If isSuccess Then
+    '        dgvRangeRecords.DataSource = objRangeRecords.blRecord
+    '        Me.dgvRangeRecords.Columns("packingdt").ValueType = GetType(Date)
+    '        Me.dgvRangeRecords.Columns("packingdt").DefaultCellStyle.Format = "yyyy/MM/dd hh:mm:ss"
+    '        For j As Int32 = 0 To lstRecordTableHeader.Count - 1
+    '            Me.dgvRangeRecords.Columns(j).HeaderText = lstRecordTableHeader(j)
+    '        Next
+    '        With Me.dgvRangeRecords
+    '            ' objectId is invisible
+    '            .Columns("objectId").Visible = False
+    '            .Columns("packingdt").Width = 200 ' Packing Date
+    '            .Columns("itemnum").Width = 100 ' Item No.
+    '            .Columns("itemname").Width = 200 ' Name
+    '            .Columns("itemname2").Width = 200 ' Name 2
+    '            .Columns("itemuom").Width = 200 ' Unit
+    '            .Columns("itemstandardweight").Width = 130 ' Std. Weight
+    '            .Columns("itemprice").Visible = False ' Price
+    '            .Columns("weightingram").Width = 100 ' Weight
+    '            .Columns("sellingprice").Width = 200 ' Selling Price
+    '            .Columns("barcode").Width = 200 ' Barcode
+    '        End With
+    '        With Me.dgvRangeRecords
+    '            .Columns("packingdt").DisplayIndex = 0
+    '            .Columns("itemnum").DisplayIndex = 1
+    '            .Columns("itemname").DisplayIndex = 2
+    '            .Columns("itemname2").DisplayIndex = 3
+    '            .Columns("itemuom").DisplayIndex = 4
+    '            .Columns("itemstandardweight").DisplayIndex = 5
+    '            .Columns("weightingram").DisplayIndex = 6
+    '            .Columns("sellingprice").DisplayIndex = 7
+    '            .Columns("barcode").DisplayIndex = 8
+    '        End With
+
+    '    End If
+    'End Sub
 
     Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
         Dim dlgInsert As dlgProduct = New dlgProduct
@@ -245,7 +284,7 @@ Public Class frmMain
 
             Case 1 ' Records page
 
-            Case 2 ' Records in Date Range
+            Case 2 ' Records in Date Range / Report
 
         End Select
     End Sub
@@ -256,23 +295,65 @@ Public Class frmMain
         'End Sub
     End Sub
 
-    Private Sub cbxPeriod_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxPeriod.SelectedIndexChanged
-        Dim dt As Date = dtpFrom.Value
-        Select Case cbxPeriod.SelectedIndex
-            Case 1 ' Monthly
-                dtpFrom.Value = modCommon.FirstDayOfMonth(dt)
-                dtpTo.Value = modCommon.LastDayOfMonth(dt)
-            Case 2 ' Weekly
-                dtpFrom.Value = modCommon.FirstDayOfWeek(dt)
-                dtpTo.Value = modCommon.LastDayOfWeek(dt)
-            Case 3 ' Daily
-                dtpFrom.Value = dt
-                dtpTo.Value = dt
-        End Select
+    Private Sub btnRangeSearch_Click(sender As Object, e As EventArgs) Handles btnRangeSearch.Click
+        Dim dlgSearchByDate As dlgDateRange = New dlgDateRange
+        dlgSearchByDate.StartPosition = FormStartPosition.CenterParent
+        Dim response = dlgSearchByDate.ShowDialog(Me)
+        If response = DialogResult.OK Then
+            lblDateRange.Text = dlgSearchByDate.getRangeInString
+            Dim dtFrom_1 As Date = dlgSearchByDate.startingDt
+            Dim dtTo_1 As Date = dlgSearchByDate.endingDt
+            objFetchData.getRangeRecords(dtFrom_1, dtTo_1)
+        End If
     End Sub
 
-    Private Sub btnRangeSearch_Click(sender As Object, e As EventArgs) Handles btnRangeSearch.Click
-        objRangeRecords.getRangeRecords(dtpFrom.Value, dtpTo.Value)
+    Private Sub btnReportGroupBy_Click(sender As Object, e As EventArgs) Handles btnReportGroupBy.Click
+        If objFetchData Is Nothing OrElse objFetchData.blRecord Is Nothing Then
+            Return
+        End If
+        If objFetchData.blRecord.Count = 0 Then
+            MessageBox.Show("The list is empty!",
+            "No data",
+            MessageBoxButtons.OKCancel,
+            MessageBoxIcon.Warning,
+            MessageBoxDefaultButton.Button1,
+            MessageBoxOptions.RightAlign,
+            True)
+            Return
+        End If
+        Dim objReport As clsReport = New clsReport
+        With objFetchData
+            objReport.setParams(.startDate, .endDate, .rangeType)
+            ' optional 1 means "grouped by items"
+            objReport.ShowReport(.blRecord, 1)
+        End With
     End Sub
+
+    Private Sub btnReport_Click(sender As Object, e As EventArgs) Handles btnReport.Click
+        If objFetchData Is Nothing OrElse objFetchData.blRecord Is Nothing Then
+            Return
+        End If
+        If objFetchData.blRecord.Count = 0 Then
+            MessageBox.Show("The list is empty!",
+            "No data",
+            MessageBoxButtons.OKCancel,
+            MessageBoxIcon.Warning,
+            MessageBoxDefaultButton.Button1,
+            MessageBoxOptions.RightAlign,
+            True)
+            Return
+        End If
+        Dim objReport As clsReport = New clsReport
+        With objFetchData
+            objReport.setParams(.startDate, .endDate, .rangeType)
+            ' optional 0 means "non grouped by items"
+            objReport.ShowReport(.blRecord, 0)
+        End With
+
+    End Sub
+
+    'Private Sub btnRangeSearch_Click(sender As Object, e As EventArgs) Handles btnRangeSearch.Click
+    '    objRangeRecords.getRangeRecords(dtpFrom.Value, dtpTo.Value)
+    'End Sub
 
 End Class

@@ -48,6 +48,12 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FastReport">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\FastReports\FastReport.Net\Framework 4.0\FastReport.dll</HintPath>
+    </Reference>
+    <Reference Include="FastReport.Bars">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\FastReports\FastReport.Net\Framework 4.0\FastReport.Bars.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -76,10 +82,17 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="clsProduct.vb" />
-    <Compile Include="clsProducts.vb" />
-    <Compile Include="clsRecord.vb" />
-    <Compile Include="clsRecords.vb" />
+    <Compile Include="dlgDateRange.Designer.vb">
+      <DependentUpon>dlgDateRange.vb</DependentUpon>
+    </Compile>
+    <Compile Include="dlgDateRange.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="rptobjects\clsFetchData.vb" />
+    <Compile Include="objects\clsProduct.vb" />
+    <Compile Include="objects\clsProducts.vb" />
+    <Compile Include="objects\clsRecord.vb" />
+    <Compile Include="objects\clsRecords.vb" />
     <Compile Include="dlgProduct.Designer.vb">
       <DependentUpon>dlgProduct.vb</DependentUpon>
     </Compile>
@@ -109,8 +122,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="rptobjects\clsReport.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="dlgDateRange.resx">
+      <DependentUpon>dlgDateRange.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="dlgProduct.resx">
       <DependentUpon>dlgProduct.vb</DependentUpon>
     </EmbeddedResource>
@@ -125,6 +142,16 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Fastreport\itemlist.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Fastreport\ProductionReport.frx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Fastreport\ProductionReportGroupByItem.frx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -136,6 +163,14 @@
     </None>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Fastreport\itemlist.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fastreport\itemlist2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
