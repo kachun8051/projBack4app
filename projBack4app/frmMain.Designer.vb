@@ -35,12 +35,12 @@ Partial Class frmMain
         Me.Label1 = New System.Windows.Forms.Label()
         Me.dgvProductionRecord = New System.Windows.Forms.DataGridView()
         Me.TabPage3 = New System.Windows.Forms.TabPage()
+        Me.btnReportGroupBy = New System.Windows.Forms.Button()
+        Me.lblDateRange = New System.Windows.Forms.Label()
         Me.btnReport = New System.Windows.Forms.Button()
         Me.btnRangeSearch = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.dgvRangeRecords = New System.Windows.Forms.DataGridView()
-        Me.lblDateRange = New System.Windows.Forms.Label()
-        Me.btnReportGroupBy = New System.Windows.Forms.Button()
         CType(Me.dgvProduct, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
@@ -210,11 +210,28 @@ Partial Class frmMain
         Me.TabPage3.Text = "TabPage3"
         Me.TabPage3.UseVisualStyleBackColor = True
         '
+        'btnReportGroupBy
+        '
+        Me.btnReportGroupBy.Location = New System.Drawing.Point(855, 13)
+        Me.btnReportGroupBy.Name = "btnReportGroupBy"
+        Me.btnReportGroupBy.Size = New System.Drawing.Size(183, 45)
+        Me.btnReportGroupBy.TabIndex = 18
+        Me.btnReportGroupBy.Text = "Report Groupby"
+        Me.btnReportGroupBy.UseVisualStyleBackColor = True
+        '
+        'lblDateRange
+        '
+        Me.lblDateRange.AutoSize = True
+        Me.lblDateRange.Location = New System.Drawing.Point(244, 18)
+        Me.lblDateRange.Name = "lblDateRange"
+        Me.lblDateRange.Size = New System.Drawing.Size(0, 23)
+        Me.lblDateRange.TabIndex = 17
+        '
         'btnReport
         '
         Me.btnReport.Location = New System.Drawing.Point(740, 14)
         Me.btnReport.Name = "btnReport"
-        Me.btnReport.Size = New System.Drawing.Size(109, 30)
+        Me.btnReport.Size = New System.Drawing.Size(109, 44)
         Me.btnReport.TabIndex = 16
         Me.btnReport.Text = "Report"
         Me.btnReport.UseVisualStyleBackColor = True
@@ -224,7 +241,7 @@ Partial Class frmMain
         Me.btnRangeSearch.Location = New System.Drawing.Point(1044, 12)
         Me.btnRangeSearch.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.btnRangeSearch.Name = "btnRangeSearch"
-        Me.btnRangeSearch.Size = New System.Drawing.Size(132, 32)
+        Me.btnRangeSearch.Size = New System.Drawing.Size(132, 46)
         Me.btnRangeSearch.TabIndex = 11
         Me.btnRangeSearch.Text = "Search ..."
         Me.btnRangeSearch.UseVisualStyleBackColor = True
@@ -244,32 +261,15 @@ Partial Class frmMain
         Me.dgvRangeRecords.AllowUserToDeleteRows = False
         Me.dgvRangeRecords.AllowUserToOrderColumns = True
         Me.dgvRangeRecords.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvRangeRecords.Location = New System.Drawing.Point(7, 55)
+        Me.dgvRangeRecords.Location = New System.Drawing.Point(7, 63)
         Me.dgvRangeRecords.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.dgvRangeRecords.Name = "dgvRangeRecords"
         Me.dgvRangeRecords.ReadOnly = True
         Me.dgvRangeRecords.RowHeadersWidth = 51
         Me.dgvRangeRecords.RowTemplate.Height = 27
         Me.dgvRangeRecords.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvRangeRecords.Size = New System.Drawing.Size(1188, 468)
+        Me.dgvRangeRecords.Size = New System.Drawing.Size(1188, 460)
         Me.dgvRangeRecords.TabIndex = 8
-        '
-        'lblDateRange
-        '
-        Me.lblDateRange.AutoSize = True
-        Me.lblDateRange.Location = New System.Drawing.Point(244, 18)
-        Me.lblDateRange.Name = "lblDateRange"
-        Me.lblDateRange.Size = New System.Drawing.Size(0, 23)
-        Me.lblDateRange.TabIndex = 17
-        '
-        'btnReportGroupBy
-        '
-        Me.btnReportGroupBy.Location = New System.Drawing.Point(855, 13)
-        Me.btnReportGroupBy.Name = "btnReportGroupBy"
-        Me.btnReportGroupBy.Size = New System.Drawing.Size(183, 30)
-        Me.btnReportGroupBy.TabIndex = 18
-        Me.btnReportGroupBy.Text = "Report Groupby"
-        Me.btnReportGroupBy.UseVisualStyleBackColor = True
         '
         'frmMain
         '

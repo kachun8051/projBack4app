@@ -43,11 +43,18 @@
             cbxPeriod.Items.Add(str)
         Next
         cbxPeriod.SelectedIndex = 0
+        m_startingDt = dtpFrom.Value
+        m_endingDt = dtpTo.Value
     End Sub
     Private Sub btnOk_Click(sender As Object, e As EventArgs) Handles btnOk.Click
-        If m_startingDt <= m_endingDt Then
+
+        If m_startingDt < m_endingDt OrElse isTwoDatesSame(m_startingDt, m_endingDt) Then
             Me.DialogResult = DialogResult.OK
+            Return
         End If
+        Dim dialog As DialogResult =
+            MessageBox.Show("Start date is greater than End date",
+                            "Select dates error", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 
     End Sub
 
